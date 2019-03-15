@@ -17,9 +17,7 @@ int main(){
     ptr2 = fopen("link.txt","w+");
 
     if(feof(ptr1) == 0){
-    //§ânode.txtÀÉ®×¤@¦æ¤@¦æÅª¤J
-    // double x[11] = {1.4142, 1.97 , 0.8823 , 1.9996 , 0.6301 , 0.3329 , 1.952  , 1.8181 , 0.4949 , 0.2079 , 0.1364 };
-    //double y[11] = {1.1534, 1.85 , 1.3926 , 1.9484 , 1.9145 , 1.1756 , 0.5866 , 0.4043 , 1.946  , 1.4758 , 1.4084 };
+    //æŠŠnode.txtæª”æ¡ˆä¸€è¡Œä¸€è¡Œè®€å…¥
         fscanf(ptr1,"%ld ",&A);
         n[0] = A;
         printf("%d\n",n[0]);
@@ -29,13 +27,6 @@ int main(){
             x[i] = B;
             y[i] = C;
             printf("%-2d         %.4f            %.4f\n",n[i+1],x[i],y[i]);
-//            fscanf(ptr1,"%d %lf %lf",&n2[i],&x2[i],&y2[i]);
-//            fgets(n,2,ptr1);
-//            fgets(x,5,ptr1);
-//            fgets(y,5,ptr1);
-//            n2[i] = atof(n[i]);//¦¹¨ç¼Æ·|§âÅª¥X¨Óªº¸ê®ÆÂà¬°double«¬ºA
-//            x2[i] = atof(x[i]);
-//            y2[i] = atof(y[i]);
         }
     }
     fclose(ptr1);
@@ -43,16 +34,14 @@ int main(){
     static int count;
     int c[11][11];
     int arr[11][11];
-//    double brr[10][2];
     int nodes = 0;
-    //§â­n©ñªºÂI®y¼Ğ¥ıªì©l­È
+    //æŠŠè¦æ”¾çš„é»åº§æ¨™å…ˆåˆå§‹å€¼
     for (int init1 =0 ; init1 <= 10 ;init1++){
         for (int init2 =0 ; init2 <= 10 ;init2++){
             arr[init1][init2] = 0;
-//            brr[init1][init2] = 0;
         }
     }
-    //if(u,v) <=1 ¦L¥Xu,vÄİ©ó­ş­Ónode¡Acount«h¬O¥Nªí²Å¦X±ø¥óªº²Ä´X±ølink(®Ú¾Úu,v¤j¤p±Æ§Ç)
+    //if(u,v) <=1 å°å‡ºu,vå±¬æ–¼å“ªå€‹nodeï¼Œcountå‰‡æ˜¯ä»£è¡¨ç¬¦åˆæ¢ä»¶çš„ç¬¬å¹¾æ¢link(æ ¹æ“šu,vå¤§å°æ’åº)
     for (int i = 0; i <= 10 ;i++){
         for(int j = 0 ; j <= 10 ;j++){
             double delta_x  = x[i]-x[j];
@@ -72,7 +61,7 @@ int main(){
     printf("%-2d\n",count);
     fprintf(ptr2,"%-2d\n",count);
 
-    //­Y¦³Ãä¬Û¥æ¡A¥HÃä¬°ª½®|µe¤@¶ê­Y¦³ÂI¦b¶ê¤º¡A´N§âÃä¬å±¼
+    //è‹¥æœ‰é‚Šç›¸äº¤ï¼Œä»¥é‚Šç‚ºç›´å¾‘ç•«ä¸€åœ“è‹¥æœ‰é»åœ¨åœ“å…§ï¼Œå°±æŠŠé‚Šç æ‰
     count = 0;
     for (int i = 0; i <= 10 ;i++){
         for(int j = 0 ; j <= 10 ;j++){
