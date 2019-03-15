@@ -2,14 +2,14 @@
  #include <stdlib.h>
  #include <string.h>
  #include <ctype.h>
-#define NODE_NUM 9 //³o¸Ì­n¤p¤ß¦]¬°·|ª½±µ³Qassign¦¨constant
-                   //©Ò¥H¦b³Q·í¦¨parameter®É¡A­n¥Î¥t¥~ªºÅÜ¼Æ±µ
-                   //¦p int node_num = NODE_NUM;
+#define NODE_NUM 9 //é€™è£¡è¦å°å¿ƒå› ç‚ºæœƒç›´æ¥è¢«assignæˆconstant
+                   //æ‰€ä»¥åœ¨è¢«ç•¶æˆparameteræ™‚ï¼Œè¦ç”¨å¦å¤–çš„è®Šæ•¸æ¥
+                   //å¦‚ int node_num = NODE_NUM;
 typedef struct edgenode *edgeptr;
 typedef struct edgenode{
     int  n_vex;
  	int  weight;
-    edgeptr nextedge;//node«¬ºAªº«ü¼Ğ¡A¦pint *
+    edgeptr nextedge;//nodeå‹æ…‹çš„æŒ‡æ¨™ï¼Œå¦‚int *
 }e;
 typedef struct vertexnode{
     int vertex;
@@ -17,22 +17,21 @@ typedef struct vertexnode{
     int time;
     edgeptr eptr;
 }v;
-//fseek(ptr1, 0, SEEK_SET);(¦^¨ì¶}ÀY)
-//freopen¤]¥i¥HÅª¼g
+//fseek(ptr1, 0, SEEK_SET);(å›åˆ°é–‹é ­)
+//freopenä¹Ÿå¯ä»¥è®€å¯«
 void CreateEarlyGraph(int,int,v*,int*,int*,int*);
 int CreateLateGraph(int,int,v*,FILE*);
 e* mergesort(e*);
 e* merge(e*,e*);
-//void CreateLateGraph(int,int,v*,int*,int*,int*);
-//SearchMapPath(graph,node_num,input_size);
+
 
 int main(){
 //Initialize
  	FILE *ptr1,*ptr2;
     int input_size;int i1,i2,i3,n_node,node_num=NODE_NUM;
-    ptr1 = fopen("input.txt","r+");//§âinput.txtÀÉ®×¤@¦æ¤@¦æÅª¤J
+    ptr1 = fopen("input.txt","r+");//æŠŠinput.txtæª”æ¡ˆä¸€è¡Œä¸€è¡Œè®€å…¥
     ptr2 = fopen("output.txt","w+");
-    fscanf(ptr1,"%ld ",&input_size);//³o­Ó¬Olong integer¤£¬O1d
+    fscanf(ptr1,"%ld ",&input_size);//é€™å€‹æ˜¯long integerä¸æ˜¯1d
     printf("input_size = %d\n",input_size);
     int n1[input_size],n2[input_size],w[input_size];
     if(feof(ptr1) == 0){
@@ -40,26 +39,17 @@ int main(){
             fscanf(ptr1,"%d %d %ld",&i1,&i2,&i3);
             n1[i-1]=i1;n2[i-1]=i2;w[i-1]=i3;
             if (n1[i-1] <= n2[i-1])n_node=n2[i-1]=i2;
-            else n_node=n1[i-1]=i1;//ºânode¦³´X­Ó
+            else n_node=n1[i-1]=i1;//ç®—nodeæœ‰å¹¾å€‹
             printf("%1d %1d %ld\n",n1[i-1],n2[i-1],w[i-1]);
     	}
     }
-    //printf("n_node = %d\n",n_node);
 
 //Process
     v* graph=(v*)malloc(node_num * sizeof(v));
     CreateEarlyGraph(node_num,input_size,graph,n1,n2,w);
-    //for(int i=0;i<node_num-1;i++){
-    //    printf("graph[%d] n_vex = %d weight = %d id = %d \n",i,graph[i].eptr->n_vex ,graph[i].eptr->weight,graph[i].id);
-	// } //¥¿±`¥i¦L
-    //printf("graph[0] n_vex = %d weight = %d\n",graph[0].eptr->n_vex ,graph[0].eptr->weight);
-    //CreateLateGraph(node_num,input_size,graph,n1,n2,w);
     CreateLateGraph(node_num,input_size,graph,ptr2);
-    //SearchMapPath(graph,node_num,input_size);
-    //Deviation()
 
 //Result
-    //PrintfResult()
     fclose(ptr1);
     fclose(ptr2);
  	return 0;
@@ -69,37 +59,35 @@ void CreateEarlyGraph(int node_num,int edge_num,v* graph,
      int i;edgeptr t;
 //Initialize
      for(i=0;i<node_num;i++){
-         graph[i].id = 0; //¦³´X±øÃä³s±µ¨ì³o­ÓÂI
-         graph[i].eptr = NULL;  //vertex³s¨ìedgenodeªºlink
+         graph[i].id = 0; //æœ‰å¹¾æ¢é‚Šé€£æ¥åˆ°é€™å€‹é»
+         graph[i].eptr = NULL;  //vertexé€£åˆ°edgenodeçš„link
 	 }
 	 for(i=0;i<node_num;i++){
-        graph[i].vertex = i; //ÂIªº¦WºÙ¶i¦æ©R¦W(¦b³oÃäª½±µ·í¦¨¾ã¼Æassign)
+        graph[i].vertex = i; //é»çš„åç¨±é€²è¡Œå‘½å(åœ¨é€™é‚Šç›´æ¥ç•¶æˆæ•´æ•¸assign)
 	 }
 //Process
-    //«Ø¥ßedgenodeªºgraph
+    //å»ºç«‹edgenodeçš„graph
     //data=vertex id=id firstedge=eptr
     //adjvex=n_vex w=weight nextedge=nextedge
     //vexnumber=node_num arcnumber=edge_num  Graph=graph
      for(i=0;i<edge_num;i++){
         t =(e*)malloc(sizeof(e));
-        t->n_vex = n2[i];  //edge³s±µ¨ìªº¥t¤@ºİÂI
+        t->n_vex = n2[i];  //edgeé€£æ¥åˆ°çš„å¦ä¸€ç«¯é»
         t->weight = w[i];  //edge weight
-        graph[n2[i]].id++; //³s±µ¨ì³o­ÓÂIªºedge¼Æ
+        graph[n2[i]].id++; //é€£æ¥åˆ°é€™å€‹é»çš„edgeæ•¸
         t->nextedge = graph[n1[i]].eptr;
-        graph[n1[i]].eptr = t; //°µ¤@­ÓStack(·s«Øªºt
-                               //graph[n1[i]].eptr¹³¬Otop
-                               //¬İ³o­ÓÂI¦³³s±µ­ş¨Çedge
-        //printf("t n_vex = %d weight = %d\n",t->n_vex ,t->weight);
+        graph[n1[i]].eptr = t; //åšä¸€å€‹Stack(æ–°å»ºçš„t
+                               //graph[n1[i]].eptråƒæ˜¯top
+                               //çœ‹é€™å€‹é»æœ‰é€£æ¥å“ªäº›edge
 	 }
- //¦b«Ø§¹¹Ï¤§«á¡A§âvertex edge³s±µ¨ìªº¤U¤@ÂI¶i¦æ±Æ§Ç(¤£¦Pedgeªº¥t¤@ºİÂI¤pªº±Æ«e­±)
+ //åœ¨å»ºå®Œåœ–ä¹‹å¾Œï¼ŒæŠŠvertex edgeé€£æ¥åˆ°çš„ä¸‹ä¸€é»é€²è¡Œæ’åº(ä¸åŒedgeçš„å¦ä¸€ç«¯é»å°çš„æ’å‰é¢)
 	 for(i=0;i<node_num;i++){
-        //if(graph[i].eptr!=NULL)
             graph[i].eptr = mergesort(graph[i].eptr);
 	 }
 }
-//¤@±ølinked list¤À¦¨¨â±ø¥h°µ±Æ§Ç(¨â¨â»¼°j¤U¥h)
+//ä¸€æ¢linked liståˆ†æˆå…©æ¢å»åšæ’åº(å…©å…©éè¿´ä¸‹å»)
 e* mergesort(e* head){
- //ºâªk¬Oslow = n/2 - 1¨úceiling fast = n/2 ¨úceiling
+ //ç®—æ³•æ˜¯slow = n/2 - 1å–ceiling fast = n/2 å–ceiling
     if(!head||!head->nextedge) return head;
     e* fast = head->nextedge;
     e* slow = head;
@@ -107,29 +95,29 @@ e* mergesort(e* head){
         slow = slow->nextedge;
         fast = fast->nextedge->nextedge;
     }
-    fast = slow ->nextedge;//³Ì«áfast·|²¾¨ìslow«á­±(·í§@l2ªºhead¥h°µ±Æ§Ç)
+    fast = slow ->nextedge;//æœ€å¾Œfastæœƒç§»åˆ°slowå¾Œé¢(ç•¶ä½œl2çš„headå»åšæ’åº)
     slow->nextedge = NULL;
     e* l1 = mergesort(head);
     e* l2 = mergesort(fast);
     return merge(l1,l2);
 }
 e* merge(e* l1,e* l2){
-    if(!l2)return l1; //³oÃä¬O²×¤î±ø¥ó¡Aª½±µ±qmergesort¹L¨Óªºl1,l2¤£·|µo¥Í
-    if(!l1)return l2; //¤ñ¦pmerge(NULL,l2)ªº®É­Ô´N·|ª½±µreturn l2
-    if(l1->n_vex < l2->n_vex){ //³o¸Ìªºn_vex´N¬Ovalue©Îkeyªº·N«ä
+    if(!l2)return l1; //é€™é‚Šæ˜¯çµ‚æ­¢æ¢ä»¶ï¼Œç›´æ¥å¾mergesortéä¾†çš„l1,l2ä¸æœƒç™¼ç”Ÿ
+    if(!l1)return l2; //æ¯”å¦‚merge(NULL,l2)çš„æ™‚å€™å°±æœƒç›´æ¥return l2
+    if(l1->n_vex < l2->n_vex){ //é€™è£¡çš„n_vexå°±æ˜¯valueæˆ–keyçš„æ„æ€
         l1->nextedge = merge(l1->nextedge,l2);
-        return l1; //l1«á­±´N·|¦ê±Æ¦nªºlinked list
+        return l1; //l1å¾Œé¢å°±æœƒä¸²æ’å¥½çš„linked list
     }
     else{
         l2->nextedge = merge(l1,l2->nextedge);
-        return l2; //³o¸Ìªºnextedge´N¬Onextªº·N«ä ¥u¬O«Å§inode«¬ºA¤£¦P
+        return l2; //é€™è£¡çš„nextedgeå°±æ˜¯nextçš„æ„æ€ åªæ˜¯å®£å‘Šnodeå‹æ…‹ä¸åŒ
     }
 }
 
 
 int CreateLateGraph(int node_num,int edge_num,v* graph,FILE *ptr2){
     int totaltime=0;int i,j,k,a,cp_num=0,count=0;
-    int cp[100];//char cp[100](°²³]¦³³Ì¦h100­Ónode)
+    int cp[100];//char cp[100](å‡è¨­æœ‰æœ€å¤š100å€‹node)
     int front=-1,rear=-1;int *topology_queue,*vl,*ve,*el,*ee;
     topology_queue = (int*)malloc(node_num * sizeof(int));
     vl = (int*)malloc(node_num * sizeof(int));
@@ -138,35 +126,30 @@ int CreateLateGraph(int node_num,int edge_num,v* graph,FILE *ptr2){
     ee = (int*)malloc(edge_num * sizeof(int));
     edgeptr t;
     for (i=0;i<node_num;i++)ve[i]=0;
-    //¦pªGvertex«e­±¤w¸g¨S¦³ÂI¤F¡A´N¥i¥H§â¥¦¥á¤Jtopological queue
+    //å¦‚æœvertexå‰é¢å·²ç¶“æ²’æœ‰é»äº†ï¼Œå°±å¯ä»¥æŠŠå®ƒä¸Ÿå…¥topological queue
     for (i=0;i<node_num;i++){
         if (graph[i].id==0){
             topology_queue[++rear] = i;
             count++;
             break;
-            //printf("i = %d\n",i);
         }
-        //printf("topology_queue[rear]= %d\n",topology_queue[rear]);
     }
-    //¦pªGtopological ÁÙ¦³vertex
-    //­pºâEarliest time(³Ì±ß®É¶¡)¤]´N¬OCreateEarlyGraph
+    //å¦‚æœtopological é‚„æœ‰vertex
+    //è¨ˆç®—Earliest time(æœ€æ™šæ™‚é–“)ä¹Ÿå°±æ˜¯CreateEarlyGraph
     while (front!=rear){
-        j = topology_queue[++front];//j¬Otopologicalªº²Ä¤@­Óvertex
-        t = graph[j].eptr; //p«ü¨ìvertex jªº²Ä¤@­Óedgenode¤W
-                           //p¬Oedgepointer
-        //printf("t = %d = %d\n",t,graph[j].eptr);//¥¿±`
+        j = topology_queue[++front];//jæ˜¯topologicalçš„ç¬¬ä¸€å€‹vertex
+        t = graph[j].eptr; //pæŒ‡åˆ°vertex jçš„ç¬¬ä¸€å€‹edgenodeä¸Š
+                           //pæ˜¯edgepointer
         while(t){
-            k = t -> n_vex;  //k¬Oedge³s±µ¨ìªºvertex
-            //printf("k = %d\n",k);¥¿±`
-            graph[k].id--;  //kÂIªº³s±µedge-1
-            //printf("graph[k].id=%d\n",graph[k].id);
-            if ((ve[j]+t->weight) > ve[k] ) //¦pªG¤W¤@­ÓÂIªºtime+edge weight >¤U¤@­ÓÂIªºtime
+            k = t -> n_vex;  //kæ˜¯edgeé€£æ¥åˆ°çš„vertex
+            graph[k].id--;  //ké»çš„é€£æ¥edge-1
+            if ((ve[j]+t->weight) > ve[k] ) //å¦‚æœä¸Šä¸€å€‹é»çš„time+edge weight >ä¸‹ä¸€å€‹é»çš„time
                 ve[k] = ve[j] + t -> weight;
-            if (graph[k].id==0){ //¦pªGkÂI«e­±¨Sedge¡A´N¥á¤J©İ¾ë
+            if (graph[k].id==0){ //å¦‚æœké»å‰é¢æ²’edgeï¼Œå°±ä¸Ÿå…¥æ‹“æ¨¸
                 topology_queue[++rear] = k;
                 count++;
             }
-            t = t ->nextedge; //¬İÂIkªº¤U¤@±øedge
+            t = t ->nextedge; //çœ‹é»kçš„ä¸‹ä¸€æ¢edge
         }
     }
         if (count < node_num){
@@ -174,21 +157,21 @@ int CreateLateGraph(int node_num,int edge_num,v* graph,FILE *ptr2){
             fprintf(ptr2,"No Solution !");
             return 0;
         }
-    //­pºâlatest time(³Ì±ß®É¶¡)u¤]´N¬OCreateLateGraph
-        totaltime = ve[node_num-1];//totaltime¥²¦b³Ì«á¤@­ÓÂI
+    //è¨ˆç®—latest time(æœ€æ™šæ™‚é–“)uä¹Ÿå°±æ˜¯CreateLateGraph
+        totaltime = ve[node_num-1];//totaltimeå¿…åœ¨æœ€å¾Œä¸€å€‹é»
         for (i=0;i<node_num;i++) vl[i] = totaltime;
         for (i=node_num-2;i>=0;i--){
-            j = topology_queue[i]; //±q­Ë¼Æ²Ä¤G­ÓÂI¶}©l®³°_(¦]¬°·|³s¨ì³Ì«á¤@­ÓÂI)
+            j = topology_queue[i]; //å¾å€’æ•¸ç¬¬äºŒå€‹é»é–‹å§‹æ‹¿èµ·(å› ç‚ºæœƒé€£åˆ°æœ€å¾Œä¸€å€‹é»)
             t = graph[j].eptr;
             while(t){
                 k = t -> n_vex;
                 if ((vl[k] - t->weight) < vl[j])
-                    vl[j] = vl[k] - t->weight; //­Yai-weight < ai-1
+                    vl[j] = vl[k] - t->weight; //è‹¥ai-weight < ai-1
                 t = t ->nextedge;
             }
         }
-        printf("°_ÂI  ²×ÂI  ³Ì¦­¶}©l®É¶¡  ³Ì±ß¶}©l®É¶¡  ®t­È  ¬O§_¬°ÃöÁä¸ô®| \n");
-  //­pºâ¬O§_¬°Critical Path
+        printf("èµ·é»  çµ‚é»  æœ€æ—©é–‹å§‹æ™‚é–“  æœ€æ™šé–‹å§‹æ™‚é–“  å·®å€¼  æ˜¯å¦ç‚ºé—œéµè·¯å¾‘ \n");
+  //è¨ˆç®—æ˜¯å¦ç‚ºCritical Path
         i = 0;
         printf("%4d\n",edge_num);
         fprintf(ptr2,"%4d\n",edge_num);
@@ -205,8 +188,8 @@ int CreateLateGraph(int node_num,int edge_num,v* graph,FILE *ptr2){
                     repeat++;
                     printf("Yes");
                     fprintf(ptr2,"Yes");
-                    if(repeat>1)cp_num--; //­Y¦P°_ÂI¡A´N¤£¥[¤J
-                    cp[++cp_num] = graph[k].vertex;//³oÃä¬O¬İ°_ÂI¡A§ï¦¨²×ÂI¤~¤£·|­«½Æ
+                    if(repeat>1)cp_num--; //è‹¥åŒèµ·é»ï¼Œå°±ä¸åŠ å…¥
+                    cp[++cp_num] = graph[k].vertex;//é€™é‚Šæ˜¯çœ‹èµ·é»ï¼Œæ”¹æˆçµ‚é»æ‰ä¸æœƒé‡è¤‡
                     printf("    graph[a].vertex=%d",graph[a].vertex);
                 }
                 else{printf("No");fprintf(ptr2,"No");}
@@ -215,16 +198,16 @@ int CreateLateGraph(int node_num,int edge_num,v* graph,FILE *ptr2){
                 t = t -> nextedge;
             }
         }
-    //§ä¥X¥ş³¡ªºcriitical path
-        printf("Critical Pathªºnode ¶¶§Ç¤§¤@¬° :");
+    //æ‰¾å‡ºå…¨éƒ¨çš„criitical path
+        printf("Critical Pathçš„node é †åºä¹‹ä¸€ç‚º :");
         cp[0] = graph[0].vertex;
-        //cp[t] = graph[node_num-1].vertex;//³Ì«á¤@­ÓÂI¥²¦bcritical path¤W
+        //cp[t] = graph[node_num-1].vertex;//æœ€å¾Œä¸€å€‹é»å¿…åœ¨critical pathä¸Š
         for (i=0;i<cp_num;i++){
             printf("%d",cp[i]);
             if (cp[i] != graph[node_num-1].vertex)printf("    ->    ");
         }
         printf("\n");
-        printf("Critical pathªø«×¬°¡G%d\n",totaltime);
+        printf("Critical pathé•·åº¦ç‚ºï¼š%d\n",totaltime);
       	return 1;
 }
 
