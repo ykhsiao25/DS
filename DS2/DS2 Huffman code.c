@@ -37,10 +37,6 @@ nodePointer  buildHuffTree(int kinds);
 nodePointer extractMin(struct MINHeap* minHeap);
 void insertHeap(struct MINHeap* minheap,nodePointer node);
 void decode(char* input,int count,FILE* ptr2);
- //struct Node* buildHuffTree(nodePointer start,int kinds);
- //nodePointer2 char_push(nodePointer2*, char );
- //char* move2(char*[] ,int );
-
 
 int main(){
  	FILE *ptr1;
@@ -48,43 +44,31 @@ int main(){
     char *input=(char *)malloc(50*sizeof(char));
     ptr1 = fopen("text.txt","r+");
     ptr2 = fopen("code.txt","w+");
-    //§âtext.txtÀÉ®×¤@¦æ¤@¦æÅª¤J
-    //fgets()¦¹¤èªk¬O®³¨ÓÅª¤@¦æ¤@¦æªº¡A¤¤¶¡ªºsize¬O­nÅªªº¤j¤p
-	//­Y¦¹¦æchar¼Æ > size-1 ¡A«hÅª¨ìsize-1¡A¥B¨ä«á¸É\0
-	//­Y¦¹¦æchar¼Æ < size-1	¡A«h¾ã¦æ¥ş³¡Åª§¹¡A¥B¨ä«á¸É\0(³Ì¦hsize-1)
+    //æŠŠtext.txtæª”æ¡ˆä¸€è¡Œä¸€è¡Œè®€å…¥
+    //fgets()æ­¤æ–¹æ³•æ˜¯æ‹¿ä¾†è®€ä¸€è¡Œä¸€è¡Œçš„ï¼Œä¸­é–“çš„sizeæ˜¯è¦è®€çš„å¤§å°
+	//è‹¥æ­¤è¡Œcharæ•¸ > size-1 ï¼Œå‰‡è®€åˆ°size-1ï¼Œä¸”å…¶å¾Œè£œ\0
+	//è‹¥æ­¤è¡Œcharæ•¸ < size-1ï¼Œå‰‡æ•´è¡Œå…¨éƒ¨è®€å®Œï¼Œä¸”å…¶å¾Œè£œ\0(æœ€å¤šsize-1)
     if(feof(ptr1) == 0){
             fgets(input, 50, ptr1);
             printf("input = %s\n",input);
-            //printf("strlen = %d\n",strlen(input));
             int i,j,k,count;
-            count = kind_count(input);  //³oÃäºâ§¹¥ş³¡´XºØ¥B¤wmalloc°O¾ĞÅéµ¹priotyQueue
+            count = kind_count(input);  //é€™é‚Šç®—å®Œå…¨éƒ¨å¹¾ç¨®ä¸”å·²mallocè¨˜æ†¶é«”çµ¦priotyQueue
             printf("count = %d\n",count);
-            //for (i=0;i<count;i++){
-            //    printf("priorityQueue[%d] -> chr = %c\n",i,priorityQueue[i] -> chr);
-            //}
-            freq_count(input,count);  //ºâ¨CºØcharªºÀW²v
-            //printf("FFFFFFF\n");
-            //for(int j =0;j < count;j++)
-            //    printf("priorityQueue[%d] -> freq = %d\n",j,priorityQueue[j] -> freq);
-            //Make_list(count);
-            //priorityQueue* = sort(&priorityQueue);
-        	//°w¹ïdata±Æ§Ç
-            //struct MINHeap* heap_root = buildMINheap(count);
-            //struct Node* root = buildHuffTree(priorityQueue[0], count);
-			//«Øminheap
-			nodePointer root =  buildHuffTree(count);
+            freq_count(input,count);  //ç®—æ¯ç¨®charçš„é »ç‡
+	    //å»ºminheap
+	    nodePointer root =  buildHuffTree(count);
 
             char a[MAX_QUEUE_SIZE];
             int code_count = 0;
             HuffmanEncode(root,a,code_count,ptr2);
-			//huffmanºtºâªk && Encoding
+			//huffmanæ¼”ç®—æ³• && Encoding
 			decode(input,count,ptr2);
     }
     fclose(ptr1);
     fclose(ptr2);
  	return 0;
  }
- //ºâÁ`¦@¦³´XºØ
+ //ç®—ç¸½å…±æœ‰å¹¾ç¨®
  int kind_count(char* input){
     int i,j,count = 0,q_index = 0;;
     for (i = 0; i <strlen(input) ;i++){
@@ -103,12 +87,12 @@ int main(){
     }
     return count;
  }
- //ºâ¨CºØªºÀW²v
+ //ç®—æ¯ç¨®çš„é »ç‡
  void freq_count(char* input,int kinds){
     for(int j =0;j < kinds;j++)
         priorityQueue[j] -> freq = 0;
         printf("GG\n");
-    //printf("strlen(input) = %d\n",strlen(input));
+
     for(int i = 0;i < strlen(input);i++){
         for(int j =0;j < kinds;j++){
             if(input[i]==priorityQueue[j] -> chr){
@@ -127,16 +111,11 @@ int main(){
             priorityQueue[i] -> right = priorityQueue[i+1];
         else{priorityQueue[i] -> right=NULL;}
     }
-    //int index=0;
-    //for (priorityQueue[index];priorityQueue[index] -> right!=NULL;priorityQueue[index]=priorityQueue[index] -> right,index++){
-    //    printf("priorityQueue[%d] -> chr = %c\n",index,priorityQueue[index] -> chr);
-    //}
-    //printf("priorityQueue[%d] -> chr = %c\n",index,priorityQueue[index] -> chr);
  }
 nodePointer  buildHuffTree(int kinds){
     nodePointer lchild,rchild,parent;
     struct MINHeap* minheap = buildMINheap(kinds);
-    //°£«D³Ñ¤Uroot¡A¤£µM´Npop¨â­Ó³Ì¤pªº¥X¨Ó¥[§¹¦A¥á¦^¥h
+    //é™¤éå‰©ä¸‹rootï¼Œä¸ç„¶å°±popå…©å€‹æœ€å°çš„å‡ºä¾†åŠ å®Œå†ä¸Ÿå›å»
     while (minheap->size != 1){
         lchild = extractMin(minheap);
         rchild = extractMin(minheap);
@@ -153,7 +132,7 @@ struct MINHeap* buildMINheap(int kinds){
     minheap->size = 0;
     minheap->volume = kinds;
     minheap->arr = (nodePointer*)malloc(kinds * sizeof(nodePointer));
-    //±N¨C­ÓNodeªº«ü¼Ğ©ñ¤Jminheap¤º¡A³o¼Ë´N¥i¥H¾Ş±±³o¨ÇNode
+    //å°‡æ¯å€‹Nodeçš„æŒ‡æ¨™æ”¾å…¥minheapå…§ï¼Œé€™æ¨£å°±å¯ä»¥æ“æ§é€™äº›Node
     for (int i = 0; i < kinds; i++)
         minheap->arr[i] = priorityQueue[i];
 
@@ -165,7 +144,7 @@ struct MINHeap* buildMINheap(int kinds){
     return minheap;
 }
 
-//insert Node¤§«á¶i¦æadjust
+//insert Nodeä¹‹å¾Œé€²è¡Œadjust
 void adjust(struct MINHeap* minheap, int parent){
     int pos = parent;
     int left = 2 * parent + 1;
@@ -183,7 +162,7 @@ void adjust(struct MINHeap* minheap, int parent){
     }
 }
 
-//·í¤÷ÂIÀu¥ıÅv¤ñ¸û§Cªº®É­Ô¡A©M¤lÂI¥æ´«¦ì¸m
+//ç•¶çˆ¶é»å„ªå…ˆæ¬Šæ¯”è¼ƒä½çš„æ™‚å€™ï¼Œå’Œå­é»äº¤æ›ä½ç½®
 void swapHeapNode(nodePointer* a,nodePointer* b){
     nodePointer t = *a;
     *a = *b;
@@ -211,17 +190,17 @@ void insertHeap(struct MINHeap* minheap,nodePointer node){
 }
 
 void HuffmanEncode(nodePointer root,char a[],int code_count,FILE *ptr2){
-    // ¥ª¤lÂI½s0
+    // å·¦å­é»ç·¨0
     if (root->left) {
         a[code_count] = '0';
         HuffmanEncode(root->left, a, code_count + 1,ptr2);
     }
-    //¥k¤lÂI½s1
+    //å³å­é»ç·¨1
     if (root->right) {
         a[code_count] = '1';
         HuffmanEncode(root->right, a, code_count + 1,ptr2);
     }
-    //¦pªG¬Oleaf´N§â¥Lªº½s½X¦L¥X¨Ó
+    //å¦‚æœæ˜¯leafå°±æŠŠä»–çš„ç·¨ç¢¼å°å‡ºä¾†
     if (!(root->left) && !(root->right)) {
         printf("%c: ", root->chr);
         fprintf(ptr2,"%c: ", root->chr);
@@ -233,7 +212,7 @@ void HuffmanEncode(nodePointer root,char a[],int code_count,FILE *ptr2){
         encode_index++;
     }
 }
-//¦L¥X½s½X
+//å°å‡ºç·¨ç¢¼
 void getresult(char a[],int n,FILE *ptr2,int encode_index){
      for (int i = 0; i < n; i++){
         printf("%c", a[i]);
